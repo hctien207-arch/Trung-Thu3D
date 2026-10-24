@@ -110,6 +110,52 @@ const topMesh = new THREE.Mesh(topGeo, topMat);
 topMesh.position.y = 3.6;
 islandGroup.add(topMesh);
 
+// --- HỆ THỐNG CỎ XANH VÀ HOA TRẮNG TRÊN MẶT ĐẤT ---
+const vegetationGroup = new THREE.Group();
+const groundRadius = 7.5; // Bán kính phủ cỏ trên mặt đảo
+const groundY = 4.0; // Độ cao bề mặt đảo
+
+const grassMaterial = new THREE.MeshStandardMaterial({ color: 0x3a5a40, roughness: 0.85 }); // Xanh lá mạ tối tự nhiên
+const flowerMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 }); // Trắng tinh khôi
+
+const grassGeo = new THREE.ConeGeometry(0.08, 0.4, 3);
+const flowerGeo = new THREE.DodecahedronGeometry(0.12);
+
+function getRandomPosition(radius) {
+    const r = radius * Math.sqrt(Math.random());
+    const theta = Math.random() * 2 * Math.PI;
+    return {
+        x: r * Math.cos(theta),
+        z: r * Math.sin(theta)
+    };
+}
+
+// Sinh ngọn cỏ (khoảng 350 khóm cỏ)
+for (let i = 0; i < 350; i++) {
+    const grass = new THREE.Mesh(grassGeo, grassMaterial);
+    const pos = getRandomPosition(groundRadius);
+    
+    grass.position.set(pos.x, groundY + 0.15, pos.z);
+    grass.rotation.y = Math.random() * Math.PI;
+    grass.rotation.z = (Math.random() - 0.5) * 0.3;
+    grass.rotation.x = (Math.random() - 0.5) * 0.3;
+    
+    vegetationGroup.add(grass);
+}
+
+// Sinh hoa trắng nhỏ (khoảng 120 bông hoa)
+for (let i = 0; i < 120; i++) {
+    const flower = new THREE.Mesh(flowerGeo, flowerMaterial);
+    const pos = getRandomPosition(groundRadius);
+    
+    flower.position.set(pos.x, groundY + 0.08, pos.z);
+    flower.rotation.set(Math.random(), Math.random(), Math.random());
+    
+    vegetationGroup.add(flower);
+}
+islandGroup.add(vegetationGroup);
+// ----------------------------------------------
+
 // BỆ MẶT ĐÁ NHỎ & ĐÁ TẢNG RẢI RÁC ÍT HƠN
 const stoneMat = new THREE.MeshStandardMaterial({
   color: 0x4a4d52,
